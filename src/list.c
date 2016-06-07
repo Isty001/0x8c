@@ -2,6 +2,19 @@
 #include "list.h"
 #include "tools.h"
 
+typedef struct node Node;
+
+struct node {
+    Node *next;
+    Tweet *tweet;
+    Node *previous;
+};
+
+struct list {
+    Node *first;
+    Node *last;
+    TweetType associated_type;
+};
 
 List *create_list(TweetType type)
 {
@@ -13,44 +26,59 @@ List *create_list(TweetType type)
     return list;
 }
 
-void setup_new(List *list, Tweet *new)
+void set_affected_nodes(List *list, Node *node)
 {
-    new->contained_by |= list->associated_type;
-    new->next = list->first;
-
-    if (NULL != new->next) {
-        new->next->previous = new;
+    if (NULL != node->next) {
+        node->next->previous = node;
     }
-}
-
-void unshift_tweet(List *list, Tweet *new)
-{
-    setup_new(list, new);
-    list->first = new;
 
     if (NULL == list->last) {
-        list->last = new;
+        list->last = node;
     }
+
+    list->first = node;
 }
 
-void prepare_pop(List *list, Tweet *popped)
+Node *create_node(void)
+{
+    Node *node = malloc(sizeof(Node));
+    node->next = NULL;
+    node->previous = NULL;
+
+    return node;
+}
+
+void unshift_tweet(List *list, Tweet *tweet)
+{
+    Node *node = create_node();
+    node->next = list->first;
+
+    tweet->contained_by |= list->associated_type;
+    node->tweet = tweet;
+
+    set_affected_nodes(list, node);
+}
+
+void prepare_pop(List *list, Node *popped)
 {
     if (NULL != popped->previous) {
         popped->previous->next = NULL;
     }
     if (NULL != popped) {
-        popped->contained_by &= ~list->associated_type;
+        popped->tweet->contained_by &= ~list->associated_type;
     }
 }
 
 Tweet *pop_tweet(List *list)
 {
-    Tweet *popped = list->last;
+    Node *popped = list->last;
+    Tweet *popped_tweet = popped->tweet;
     list->last = popped->previous;
 
     prepare_pop(list, popped);
+    free(popped);
 
-    return popped;
+    return popped_tweet;
 }
 
 bool free_if_orphaned(Tweet *tweet)
@@ -66,21 +94,29 @@ Tweet *create_tweet(void)
 {
     Tweet *tweet = malloc(sizeof(Tweet));
     tweet->contained_by = NONE;
-    tweet->next = NULL;
-    tweet->previous = NULL;
 
     return tweet;
 }
 
 void foreach(List *list, ForeachCallback callback)
 {
-    Tweet *current = list->first;
+    Node *current = list->first;
 
     while (NULL != current->next) {
-        if (HALT == callback(current)) {
+        if (HALT == callback(current->tweet)) {
             return;
         }
         current = current->next;
     }
-    callback(current);
+    callback(current->tweet);
+}
+
+Tweet *get_first_tweet(List *list)
+{
+    return list->first->tweet;
+}
+
+Tweet *get_last_tweet(List *list)
+{
+    return list->last->tweet;
 }

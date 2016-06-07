@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <malloc.h>
 #include <stdlib.h>
+#include <memory.h>
 
 
 FILE *open_file(char *path, char *mode)
@@ -26,9 +27,9 @@ size_t get_size(FILE *file)
 
 char *get_file_content(char *path)
 {
-    FILE *file = open_file(path, "r");
-    size_t size = get_size(file);
-    char *buffer = malloc(size);
+    FILE *file = open_file(path, "rb");
+    size_t size = get_size(file) + 1;
+    char *buffer = calloc(size, sizeof(char));
 
     fread(buffer, 1, size, file);
     fclose(file);

@@ -54,8 +54,8 @@ void list_tear_down(void)
 
 void assert_first_and_last(void)
 {
-    mu_assert_int_eq(third->id, timeline->first->id);
-    mu_assert_int_eq(first->id, timeline->last->id);
+    mu_assert_int_eq(third->id, get_first_tweet(timeline)->id);
+    mu_assert_int_eq(first->id, get_last_tweet(timeline)->id);
 }
 
 void assert_popped_tweets(void)

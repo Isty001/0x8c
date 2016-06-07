@@ -18,22 +18,20 @@ typedef enum foreach_state {
 
 typedef struct tweet {
     int id;
-    struct tweet *next;
-    struct tweet *previous;
     TweetType contained_by;
 } Tweet;
 
-typedef struct list {
-    Tweet *first;
-    Tweet *last;
-    TweetType associated_type;
-} List;
+typedef struct list List;
 
 typedef ForeachState (*ForeachCallback)(Tweet *current);
 
 List *create_list(TweetType associated_type);
 
-void unshift_tweet(List *list, Tweet *new);
+Tweet *get_first_tweet(List *list);
+
+Tweet *get_last_tweet(List *list);
+
+void unshift_tweet(List *list, Tweet *tweet);
 
 Tweet *pop_tweet(List *list);
 
