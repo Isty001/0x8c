@@ -1,33 +1,16 @@
 #include <malloc.h>
 #include <stdlib.h>
-#include <stdarg.h>
-#include "minunit.h"
-#include "../src/list.h"
-#include "../src/tools.h"
+#include "../unit_test/minunit.h"
+#include "../../src/tweet/list.h"
 
 
 List *timeline = NULL, *mention = NULL;
 Tweet *first = NULL, *second = NULL, *third = NULL;
 
-void free_tweets(int count, ...)
+Tweet *create_test_tweet(unsigned long long int id)
 {
-    va_list tweets;
-    va_start(tweets, count);
-
-    for (int i = 0; i < count; i++) {
-        free(va_arg(tweets, Tweet*));
-    }
-    va_end(tweets);
-}
-
-void free_all_tweets(void)
-{
-    free_tweets(3, first, second, third);
-}
-
-Tweet *create_test_tweet(int id)
-{
-    Tweet *tweet = create_tweet();
+    Tweet *tweet = malloc(sizeof(Tweet));
+    tweet->contained_by = NONE;
     tweet->id = id;
 
     return tweet;
@@ -49,7 +32,8 @@ void list_setup(void)
 
 void list_tear_down(void)
 {
-    free_tweets(2, timeline, mention);
+    destroy_list(timeline);
+    destroy_list(mention);
 }
 
 void assert_first_and_last(void)
@@ -69,7 +53,8 @@ void assert_popped_tweets(void)
     mu_assert_int_eq(third->id, third_popped->id);
     mu_assert(free_if_orphaned(third_popped), "Orphaned Tweet is not freed");
 
-    free_tweets(2, first, second);
+    free(first);
+    free(second);
 }
 
 MU_TEST(test_unshift_pop)
@@ -93,11 +78,9 @@ MU_TEST(test_multiple_list_contained_tweet)
 
     assert_list_flags();
     mu_assert(true == free_if_orphaned(pop_tweet(mention)), "This should be freed");
-
-    free_tweets(2, second, third);
 }
 
-void safe_assert_int(int expected, int actual)
+void safe_assert_int(int expected, unsigned long long int actual)
 {
     mu_assert_int_eq(expected, actual);
 }
@@ -106,12 +89,10 @@ MU_TEST(test_foreach)
 {
     int id = 3;
 
-    foreach(timeline, lambda(ForeachState, (Tweet * current) {
-        safe_assert_int(id--, current->id);
+    foreach(timeline, lambda(LoopCallbackResponse, (Node * current) {
+        safe_assert_int(id--, current->tweet->id);
         return CONTINUE;
     }));
-
-    free_all_tweets();
 }
 
 void list_test_suite(void)

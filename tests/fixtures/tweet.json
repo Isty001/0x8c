@@ -1,0 +1,14 @@
+{
+  "id": 738428918907080706,
+  "text": "Hello, I'm a test tweet ;_;",
+  "in_reply_to_status_id": null,
+  "user": {
+    "id": 74274804,
+    "screen_name": "Test User"
+  },
+  "retweet_count": 98,
+  "favorite_count": 0,
+  "favorited": false,
+  "retweeted": true,
+  "timestamp_ms": "1464890148270"
+}

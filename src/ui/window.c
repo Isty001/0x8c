@@ -11,9 +11,9 @@ static int width;
 #define FORM_HEIGHT 3
 #define FORM_WIDTH width - (2 * PADDING)
 #define STREAM_HEIGHT height - (FORM_HEIGHT + PADDING)
-#define STREAM_WIDTH (width - PADDING) / 2
+#define STREAM_WIDTH (width / 2) - (2 * PADDING)
 
-void create_main_window(void)
+static void create_main_window(void)
 {
     initscr();
     getmaxyx(stdscr, height, width);
@@ -26,7 +26,7 @@ void create_main_window(void)
     assert(NULL != main_window);
 }
 
-WINDOW *create_sub_window(int height, int width, int y, int x)
+static WINDOW *create_sub_window(int height, int width, int y, int x)
 {
     WINDOW *sub_window = derwin(main_window, height, width, y, x);
     assert(NULL != sub_window);
@@ -34,19 +34,19 @@ WINDOW *create_sub_window(int height, int width, int y, int x)
     return sub_window;
 }
 
-void create_form_window(void)
+static void create_form_window(void)
 {
     form_window = create_sub_window(FORM_HEIGHT, FORM_WIDTH, height - 4, PADDING);
 
     box(form_window, 0, 0);
 }
 
-void create_stream_windows(void)
+static void create_stream_windows(void)
 {
     timeline_window = create_sub_window(STREAM_HEIGHT, STREAM_WIDTH, 1, PADDING);
-    notification_window = create_sub_window(STREAM_HEIGHT, STREAM_WIDTH, 1, width / 2);
+    notification_window = create_sub_window(STREAM_HEIGHT, STREAM_WIDTH, 1, (width / 2) + PADDING);
 
-    mvwvline(main_window, PADDING, width / 2, '#', STREAM_HEIGHT - PADDING);
+    mvwvline(main_window, PADDING, width / 2, '|', STREAM_HEIGHT - PADDING);
 
 #ifdef DEBUG
     box(notification_window, 0, 0);
@@ -54,7 +54,7 @@ void create_stream_windows(void)
 #endif
 }
 
-void create_form(void)
+static void create_form(void)
 {
     fields[0] = new_field(2, width - 2, height - 3, 2, 0, 0);
     assert(NULL != fields[0]);
@@ -68,7 +68,7 @@ void create_form(void)
     post_form(form);
 }
 
-void refresh_all(void)
+static void refresh_all(void)
 {
     refresh();
     wrefresh(main_window);

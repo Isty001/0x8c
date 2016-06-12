@@ -1,5 +1,5 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef _0x8c_WINDOW_H
+#define _0x8c_WINDOW_H
 
 #include <ncurses.h>
 #include <form.h>

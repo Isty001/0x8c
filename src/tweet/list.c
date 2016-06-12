@@ -1,14 +1,6 @@
 #include <malloc.h>
 #include "list.h"
-#include "tools.h"
 
-typedef struct node Node;
-
-struct node {
-    Node *next;
-    Tweet *tweet;
-    Node *previous;
-};
 
 struct list {
     Node *first;
@@ -16,9 +8,14 @@ struct list {
     TweetType associated_type;
 };
 
+static bool is_empty(List *list)
+{
+    return NULL == list->first;
+}
+
 List *create_list(TweetType type)
 {
-    List *list = malloc(sizeof(List));
+    List *list = alloc(sizeof(List));
     list->associated_type = type;
     list->first = NULL;
     list->last = NULL;
@@ -26,7 +23,19 @@ List *create_list(TweetType type)
     return list;
 }
 
-void set_affected_nodes(List *list, Node *node)
+void destroy_list(List *list)
+{
+    foreach(list, lambda(LoopCallbackResponse, (Node * current) {
+        free(current->tweet);
+        free(current);
+
+        return CONTINUE;
+    }));
+
+    free(list);
+}
+
+static void set_affected_nodes(List *list, Node *node)
 {
     if (NULL != node->next) {
         node->next->previous = node;
@@ -39,9 +48,9 @@ void set_affected_nodes(List *list, Node *node)
     list->first = node;
 }
 
-Node *create_node(void)
+static Node *create_node(void)
 {
-    Node *node = malloc(sizeof(Node));
+    Node *node = alloc(sizeof(Node));
     node->next = NULL;
     node->previous = NULL;
 
@@ -59,7 +68,7 @@ void unshift_tweet(List *list, Tweet *tweet)
     set_affected_nodes(list, node);
 }
 
-void prepare_pop(List *list, Node *popped)
+static void prepare_pop(List *list, Node *popped)
 {
     if (NULL != popped->previous) {
         popped->previous->next = NULL;
@@ -69,8 +78,17 @@ void prepare_pop(List *list, Node *popped)
     }
 }
 
+static void remove_first_if_also_last(List *list)
+{
+    if (list->first->tweet->id == list->last->tweet->id) {
+        list->first = NULL;
+    }
+}
+
 Tweet *pop_tweet(List *list)
 {
+    remove_first_if_also_last(list);
+
     Node *popped = list->last;
     Tweet *popped_tweet = popped->tweet;
     list->last = popped->previous;
@@ -84,31 +102,25 @@ Tweet *pop_tweet(List *list)
 bool free_if_orphaned(Tweet *tweet)
 {
     if (tweet->contained_by == NONE) {
-        free(tweet);
+        destroy_tweet(tweet);
         return true;
     }
     return false;
 }
 
-Tweet *create_tweet(void)
-{
-    Tweet *tweet = malloc(sizeof(Tweet));
-    tweet->contained_by = NONE;
-
-    return tweet;
-}
-
 void foreach(List *list, ForeachCallback callback)
 {
-    Node *current = list->first;
+    Node *next, *current = list->first;
 
-    while (NULL != current->next) {
-        if (HALT == callback(current->tweet)) {
-            return;
+    if (false == is_empty(list)){
+        while (NULL != (next = current->next)) {
+            if (BREAK == callback(current)) {
+                return;
+            }
+            current = next;
         }
-        current = current->next;
+        callback(current);
     }
-    callback(current->tweet);
 }
 
 Tweet *get_first_tweet(List *list)

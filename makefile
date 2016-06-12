@@ -2,8 +2,8 @@ SOURCES = $(shell find src -name '*.c' )
 TEST_SOURCES = $(shell find src tests -name '*.c' ! -name window.c ! -name window_event.c ! -name curl.c ! -name main.c )
 
 DEBUG_FLAG = -D DEBUG
-COMMON_CFLAGS = -g -Wall -Wextra
-override CFLAGS +=  $(shell pkg-config --cflags --libs libcurl oauth form ncurses)
+COMMON_CFLAGS = -g -Wall -Wextra -l json-c
+override CFLAGS +=  -l curl -l oauth -l form -l ncurses
 
 TEST_CFLAGS = -D UNIT_TEST $(DEBUG_FLAG)
 
@@ -17,4 +17,4 @@ run-debug:
 	make run CFLAGS="$(DEBUG_FLAG)"
 
 test:
-	gcc $(TEST_SOURCES) $(TEST_CFLAGS) $(COMMON_CFLAGS) -o twitter_test.o && ./twitter_test.o
+	gcc $(TEST_SOURCES) $(TEST_CFLAGS) $(COMMON_CFLAGS) -laa -o twitter_test.o && ./twitter_test.o
