@@ -7,7 +7,7 @@
 
 static char *fixtures_dir = NULL;
 
-static char *get_fixtures_dir(void)
+char *get_fixtures_dir(void)
 {
     if (NULL == fixtures_dir) {
         fixtures_dir = malloc(PATH_MAX);

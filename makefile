@@ -17,4 +17,4 @@ run-debug:
 	make run CFLAGS="$(DEBUG_FLAG)"
 
 test:
-	gcc $(TEST_SOURCES) $(TEST_CFLAGS) $(COMMON_CFLAGS) -laa -o twitter_test.o && ./twitter_test.o
+	gcc $(TEST_SOURCES) $(TEST_CFLAGS) $(COMMON_CFLAGS) -o twitter_test.o && ./twitter_test.o
