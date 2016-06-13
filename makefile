@@ -2,7 +2,7 @@ SOURCES = $(shell find src -name '*.c' )
 TEST_SOURCES = $(shell find src tests -name '*.c' ! -name window.c ! -name window_event.c ! -name curl.c ! -name main.c )
 
 DEBUG_FLAG = -D DEBUG
-COMMON_CFLAGS = -g -Wall -Wextra -l json-c
+COMMON_CFLAGS = -g -Wall -Wextra -l json-c -std=gnu11
 override CFLAGS +=  -l curl -l oauth -l form -l ncurses
 
 TEST_CFLAGS = -D UNIT_TEST $(DEBUG_FLAG)
