@@ -1,6 +1,6 @@
 #include "tweet/list_test.h"
 #include "misc/io_test.h"
-#include "misc/tools_test.h"
+#include "misc/utils_test.h"
 #include "tweet/tweet_test.h"
 
 #define NOT_TEST_SUITE

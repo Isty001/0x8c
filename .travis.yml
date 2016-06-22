@@ -1,5 +1,9 @@
 sudo: required
 language: c
 compiler: gcc
-before-script: sudo apt-get install libjson0 libjson0-dev
+before-script:
+  - sudo apt-get install libjson0 libjson0-dev
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+  - sudo apt-get install gcc-5
 script: make test

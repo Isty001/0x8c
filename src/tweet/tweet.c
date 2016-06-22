@@ -31,10 +31,10 @@ static JSON *move_to_key(JSON *json, char *key)
     return buffer;
 }
 
-static inline LONGEST_UNSIGNED get_unsigned_long(JSON *json, char *key)
+static inline uint64_t get_unsigned_long(JSON *json, char *key)
 {
     if (false == json_object_is_type(move_to_key(json, key), json_type_null)) {
-        return (LONGEST_UNSIGNED) strtoll(get_string(json, key), NULL, 0);
+        return (uint64_t) strtoll(get_string(json, key), NULL, 0);
     }
     return 0;
 }
@@ -50,7 +50,7 @@ static void set_content(JSON *json, Tweet *tweet)
 
 static void set_created_at(JSON *json, Tweet *tweet)
 {
-    LONGEST_UNSIGNED timestamp_ms = get_unsigned_long(json, "timestamp_ms");
+    uint64_t timestamp_ms = get_unsigned_long(json, "timestamp_ms");
     time_t time = (time_t)(timestamp_ms / 1000);
     struct tm info;
 
@@ -80,6 +80,7 @@ static void add_user_data(JSON *json, Tweet *tweet)
     tweet->user_name = get_string(user, "screen_name");
 }
 
+//Todo: array of tweet
 Tweet *create_tweet(char *json_string)
 {
     JSON *json = json_tokener_parse(json_string);

@@ -5,12 +5,11 @@
 #include <stdlib.h>
 
 
-typedef enum loop_callback_response {
+typedef enum {
     CONTINUE,
     BREAK,
 } LoopCallbackResponse;
 
-#define LONGEST_UNSIGNED unsigned long long int
 
 #define flag_exists(bitmask, flag) ((bitmask & flag) == flag)
 

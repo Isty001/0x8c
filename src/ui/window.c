@@ -1,5 +1,6 @@
 #include <assert.h>
 #include "window.h"
+#include "display.h"
 
 static FORM *form;
 static FIELD *fields[2];
@@ -16,6 +17,9 @@ static int width;
 static void create_main_window(void)
 {
     initscr();
+    start_color();
+    use_default_colors();
+    display_init();
     getmaxyx(stdscr, height, width);
 
     noecho();
@@ -98,6 +102,18 @@ void destroy_window(void)
     delwin(notification_window);
     delwin(main_window);
     endwin();
+}
+
+void add_tweet(Tweet *tweet)
+{
+    display_setup_current(timeline_window, tweet);
+
+    display_head();
+    display_content();
+    display_info();
+
+    wrefresh(timeline_window);
+    refresh();
 }
 
 void form_event(int event)

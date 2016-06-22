@@ -1,6 +1,6 @@
 #include <memory.h>
 #include "../unit_test/minunit_extended.h"
-#include "../../src/misc/tools.h"
+#include "../../src/misc/utils.h"
 
 
 void safe_assert_string(char *expected, char *actual)

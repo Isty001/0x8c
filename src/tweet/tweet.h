@@ -2,10 +2,11 @@
 #define _0x8c_TWEET_H
 
 #include <stdbool.h>
-#include "../misc/tools.h"
+#include <stdint.h>
+#include "../misc/utils.h"
 
 
-typedef enum tweet_type {
+typedef enum {
     NONE = 1,
     TIMELINE = 2,
     MENTION = 4,
@@ -13,18 +14,18 @@ typedef enum tweet_type {
     FAVORITE = 16,
 } TweetType;
 
-typedef struct tweet {
-    LONGEST_UNSIGNED id;
+typedef struct {
+    uint64_t id;
     char *content;
     char created_at[80];
-    LONGEST_UNSIGNED in_reply_to_tweet;
-    unsigned int retweet_count;
-    unsigned int favorite_count;
+    uint64_t in_reply_to_tweet;
+    uint32_t retweet_count;
+    uint32_t favorite_count;
     bool is_reply;
     bool is_favorited;
     bool is_retweeted;
     TweetType contained_by;
-    LONGEST_UNSIGNED user_id;
+    uint64_t user_id;
     const char *user_name;
 } Tweet;
 
