@@ -1,6 +1,6 @@
 SOURCES = $(shell find src -name '*.c' )
 
-//Todo: refakt
+#Todo: refakt
 TEST_SOURCES = $(shell find src tests -name '*.c' ! -name window.c ! -name window_event.c ! -name curl.c ! -name main.c ! -name display.c)
 
 OBJ = twitter.o
