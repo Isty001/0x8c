@@ -8,7 +8,7 @@ DEBUG_FLAG = -D DEBUG
 override CFLAGS +=  -l curl -l oauth -l form -l ncurses
 TEST_CFLAGS = -D UNIT_TEST $(DEBUG_FLAG)
 
-compile = gcc $1 -g -Wall -Wextra -l json-c -o $(OBJ)
+compile = gcc $1 -g -Wall -Wextra -std=gnu11 -l json-c -o $(OBJ)
 
 default:
 	$(call compile,$(SOURCES) $(CFLAGS),twitter)
