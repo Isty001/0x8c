@@ -96,5 +96,6 @@ Tweet *create_tweet(char *json_string)
 
 void destroy_tweet(Tweet *tweet)
 {
+    //Todo: destroy the tweet properly
     free_multiple(2, tweet->content, tweet);
 }

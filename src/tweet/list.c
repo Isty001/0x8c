@@ -26,7 +26,7 @@ List *create_list(TweetType type)
 void destroy_list(List *list)
 {
     foreach(list, lambda(LoopCallbackResponse, (Node * current) {
-        free(current->tweet);
+        destroy_tweet(current->tweet);
         free(current);
 
         return CONTINUE;

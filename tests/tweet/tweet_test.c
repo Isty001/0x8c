@@ -8,7 +8,7 @@ MU_TEST(test_create_tweet)
     char *json_string = read_fixture("tweet.json");
     Tweet *tweet = create_tweet(json_string);
 
-    mu_assert(false == tweet->is_favorited && true == tweet->is_retweeted && false == tweet->is_reply, "Boolean values of the tweet are incorrect");
+    mu_assert(false == tweet->is_favorited && tweet->is_retweeted && false == tweet->is_reply, "Boolean values of the tweet are incorrect");
     mu_assert(tweet->favorite_count == 0, "Favorite should be 0");
     mu_assert(tweet->retweet_count == 98, "Retweet count should be 98");
     mu_assert(738428918907080706 == tweet->id, "Invalid id");

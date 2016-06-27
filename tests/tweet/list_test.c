@@ -10,6 +10,7 @@ Tweet *first = NULL, *second = NULL, *third = NULL;
 Tweet *create_test_tweet(unsigned long long int id)
 {
     Tweet *tweet = malloc(sizeof(Tweet));
+    tweet->content = alloc(1);
     tweet->contained_by = NONE;
     tweet->id = id;
 
@@ -52,9 +53,6 @@ void assert_popped_tweets(void)
     third_popped = pop_tweet(timeline);
     mu_assert_int_eq(third->id, third_popped->id);
     mu_assert(free_if_orphaned(third_popped), "Orphaned Tweet is not freed");
-
-    free(first);
-    free(second);
 }
 
 MU_TEST(test_unshift_pop)
@@ -66,7 +64,7 @@ MU_TEST(test_unshift_pop)
 void assert_list_flags()
 {
     mu_assert(false == flag_exists(first->contained_by, TIMELINE), "Timeline flag sohuldn't be set");
-    mu_assert(true == flag_exists(first->contained_by, MENTION), "Mention flag should be set");
+    mu_assert(flag_exists(first->contained_by, MENTION), "Mention flag should be set");
 }
 
 MU_TEST(test_multiple_list_contained_tweet)
@@ -77,7 +75,7 @@ MU_TEST(test_multiple_list_contained_tweet)
     mu_assert(false == free_if_orphaned(pop_tweet(timeline)), "This shouldn't be freed yet");
 
     assert_list_flags();
-    mu_assert(true == free_if_orphaned(pop_tweet(mention)), "This should be freed");
+    mu_assert(free_if_orphaned(pop_tweet(mention)), "This should be freed");
 }
 
 void safe_assert_int(int expected, unsigned long long int actual)
@@ -101,7 +99,6 @@ void list_test_suite(void)
     MU_RUN_TEST(test_multiple_list_contained_tweet);
     MU_RUN_TEST(test_foreach);
 }
-
 
 void run_list_test_suite(void)
 {
